@@ -1,4 +1,6 @@
-﻿namespace Finance
+﻿using Messages;
+
+namespace Finance
 {
     class InvoiceOverdueEvent : InvoiceOverdue
     {

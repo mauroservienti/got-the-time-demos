@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Messages;
 using NServiceBus;
 
 namespace Finance
 {
-    public class OverdueInvoicePolicy : 
+    class OverdueInvoicePolicy :
         Saga<OverdueInvoicePolicy.OverdueInvoiceData>,
         IAmStartedByMessages<InvoiceIssued>,
         IHandleTimeouts<CheckPayment>
     {
-        public class OverdueInvoiceData : ContainSagaData
+        internal class OverdueInvoiceData : ContainSagaData
         {
             public int InvoiceNumber { get; set; }
         }
@@ -43,7 +44,7 @@ namespace Finance
                     InvoiceNumber = invoiceNumber
                 });
             }
-                
+
             MarkAsComplete();
         }
     }

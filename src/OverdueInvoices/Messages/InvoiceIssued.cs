@@ -1,7 +1,7 @@
 ﻿using System;
 using NServiceBus;
 
-namespace Finance
+namespace Messages
 {
     public interface InvoiceIssued : IEvent
     {

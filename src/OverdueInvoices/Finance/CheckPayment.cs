@@ -1,6 +1,6 @@
 ﻿namespace Finance
 {
-    public class CheckPayment
+    class CheckPayment
     {
     }
 }

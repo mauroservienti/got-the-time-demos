@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Finance", "Finance\Finance.csproj", "{14757DD1-098A-45A2-8AA1-1B221C3E111D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{7466AF2F-CBE4-4ECF-9687-97B18E17B5C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{14757DD1-098A-45A2-8AA1-1B221C3E111D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14757DD1-098A-45A2-8AA1-1B221C3E111D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14757DD1-098A-45A2-8AA1-1B221C3E111D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7466AF2F-CBE4-4ECF-9687-97B18E17B5C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7466AF2F-CBE4-4ECF-9687-97B18E17B5C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7466AF2F-CBE4-4ECF-9687-97B18E17B5C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7466AF2F-CBE4-4ECF-9687-97B18E17B5C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
