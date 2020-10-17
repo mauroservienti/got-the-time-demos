@@ -31,7 +31,7 @@ namespace OverdueInvoices.IntegrationTests
                 .Done(ctx => ctx.SagaWasCompleted<OverdueInvoicePolicy>() || ctx.HasFailedMessages())
                 .Run();
 
-            Assert.True(context.MessageWasProcessedBySaga<InvoiceIssuedEvent, OverdueInvoicePolicy>());
+            Assert.True(context.MessageWasProcessedBySaga<InvoiceIssued, OverdueInvoicePolicy>());
             Assert.True(context.MessageWasProcessedBySaga<CheckPayment, OverdueInvoicePolicy>());
             Assert.False(context.HasFailedMessages());
             Assert.False(context.HasHandlingErrors());
