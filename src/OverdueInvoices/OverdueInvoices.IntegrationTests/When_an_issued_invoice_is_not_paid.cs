@@ -6,6 +6,7 @@ using NServiceBus.IntegrationTesting;
 using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
+using DebtCollection;
 using Finance;
 
 namespace OverdueInvoices.IntegrationTests
@@ -19,6 +20,7 @@ namespace OverdueInvoices.IntegrationTests
                 {
                     ctx.RegisterTimeoutRescheduleRule<CheckPayment>((msg, delay) => new DoNotDeliverBefore(DateTime.UtcNow.AddSeconds(2)));
                 })
+                .WithEndpoint<DebtCollectionEndpoint>()
                 .WithEndpoint<FinanceEndpoint>(behavior =>
                 {
                     behavior.When(session => session.Publish(new TestInvoiceIssuedEvent()
@@ -28,10 +30,9 @@ namespace OverdueInvoices.IntegrationTests
                         CustomerCountry = "not italy"
                     }));
                 })
-                .Done(ctx => ctx.HandlerWasInvoked<InvoiceOverdueHandler>() || ctx.HasFailedMessages())
+                .Done(ctx => ctx.HandlerWasInvoked<InvoiceOverdueHandler>() && ctx.SagaWasCompleted<OverdueInvoicePolicy>() || ctx.HasFailedMessages())
                 .Run();
 
-            Assert.True(context.SagaWasCompleted<OverdueInvoicePolicy>());
             Assert.True(context.MessageWasProcessedByHandler<InvoiceOverdue, InvoiceOverdueHandler>());
             Assert.False(context.HasFailedMessages());
             Assert.False(context.HasHandlingErrors());
@@ -42,6 +43,14 @@ namespace OverdueInvoices.IntegrationTests
             public FinanceEndpoint()
             {
                 EndpointSetup(new FinanceEndpointTemplate(new NeverPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
+            }
+        }
+        
+        class DebtCollectionEndpoint : EndpointConfigurationBuilder
+        {
+            public DebtCollectionEndpoint()
+            {
+                EndpointSetup<DebtCollectionEndpointTemplate>();
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Messages;
 using NServiceBus;
 
-namespace Finance
+namespace DebtCollection
 {
     public class InvoiceOverdueHandler : IHandleMessages<InvoiceOverdue>
     {
