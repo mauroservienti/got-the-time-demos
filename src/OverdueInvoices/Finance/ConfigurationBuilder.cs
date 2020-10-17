@@ -14,6 +14,9 @@ namespace Finance
             config.UseTransport<LearningTransport>();
             config.UsePersistence<LearningPersistence>();
             config.SendFailedMessagesTo("error");
+            
+            var scanner = config.AssemblyScanner();
+            scanner.IncludeOnly("Finance.dll", "Messages.dll");
 
             config.RegisterComponents(components =>
             {

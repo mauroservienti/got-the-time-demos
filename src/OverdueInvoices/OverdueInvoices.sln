@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messag
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OverdueInvoices.IntegrationTests", "OverdueInvoices.IntegrationTests\OverdueInvoices.IntegrationTests.csproj", "{CAD40A68-FB7B-4633-A788-5DA846DCB356}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DebtCollection", "DebtCollection\DebtCollection.csproj", "{1C392C81-636D-4A08-88E1-3C6898A629A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.AssemblyScanner.Extensions", "NServiceBus.AssemblyScanner.Extensions\NServiceBus.AssemblyScanner.Extensions.csproj", "{0D51A11D-BE6F-4F63-9ADF-6345C317E015}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{CAD40A68-FB7B-4633-A788-5DA846DCB356}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAD40A68-FB7B-4633-A788-5DA846DCB356}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAD40A68-FB7B-4633-A788-5DA846DCB356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C392C81-636D-4A08-88E1-3C6898A629A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C392C81-636D-4A08-88E1-3C6898A629A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C392C81-636D-4A08-88E1-3C6898A629A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C392C81-636D-4A08-88E1-3C6898A629A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D51A11D-BE6F-4F63-9ADF-6345C317E015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D51A11D-BE6F-4F63-9ADF-6345C317E015}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D51A11D-BE6F-4F63-9ADF-6345C317E015}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D51A11D-BE6F-4F63-9ADF-6345C317E015}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DebtCollection\DebtCollection.csproj" />
       <ProjectReference Include="..\Finance\Finance.csproj" />
       <ProjectReference Include="..\Messages\Messages.csproj" />
     </ItemGroup>
