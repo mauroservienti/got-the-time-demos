@@ -14,7 +14,7 @@ namespace DebtCollection
             config.SendFailedMessagesTo("error");
             
             var scanner = config.AssemblyScanner();
-            scanner.IncludeOnly("DebtCollection.dll", "Messages.dll");
+            scanner.IncludeOnlyThisAssemblyAndReferences();
 
             return config;
         }
