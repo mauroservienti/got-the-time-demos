@@ -10,10 +10,10 @@ using Finance;
 
 namespace OverdueInvoices.IntegrationTests
 {
-    public class When_an_invoice_is_issued
+    public class When_an_issued_invoice_is_paid
     {
         [Test]
-        public async Task OverdueInvoicePolicy_is_completed_as_expected()
+        public async Task OverdueInvoicePolicy_is_completed()
         {
             var context = await Scenario.Define<IntegrationScenarioContext>(ctx =>
                 {
