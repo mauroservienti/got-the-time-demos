@@ -9,10 +9,7 @@ namespace Finance
         static async Task Main(string[] args)
         {
             Console.Title = "Finance";
-
-            var config = new FinanceEndpointConfiguration();
-
-            var endpointInstance = await Endpoint.Start(config);
+            var endpointInstance = await Endpoint.Start(new ConfigurationFactory().CreateConfiguration());
 
             Console.WriteLine($"{Console.Title} started. Press any key to stop.");
             Console.ReadLine();

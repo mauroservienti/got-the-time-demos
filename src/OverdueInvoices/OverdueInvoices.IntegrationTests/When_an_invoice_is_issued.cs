@@ -21,7 +21,7 @@ namespace OverdueInvoices.IntegrationTests
                 })
                 .WithEndpoint<FinanceEndpoint>(behavior =>
                 {
-                    behavior.When(session => session.Publish(new InvoiceIssuedEvent()
+                    behavior.When(session => session.Publish(new TestInvoiceIssuedEvent()
                     {
                         InvoiceNumber = 123,
                         DueDate = DateTime.Now.AddMonths(1),
@@ -41,15 +41,8 @@ namespace OverdueInvoices.IntegrationTests
         {
             public FinanceEndpoint()
             {
-                EndpointSetup<EndpointTemplate<FinanceEndpointConfiguration>>();
+                EndpointSetup(new FinanceEndpointTemplate(new AlwaysPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
             }
-        }
-
-        class InvoiceIssuedEvent : InvoiceIssued
-        {
-            public int InvoiceNumber { get; set; }
-            public DateTime DueDate { get; set; }
-            public string CustomerCountry { get; set; }
         }
     }
 }

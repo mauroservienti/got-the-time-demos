@@ -10,9 +10,16 @@ namespace Finance
         IAmStartedByMessages<InvoiceIssued>,
         IHandleTimeouts<CheckPayment>
     {
+        private readonly IInvoiceService _invoiceService;
+
         internal class OverdueInvoiceData : ContainSagaData
         {
             public int InvoiceNumber { get; set; }
+        }
+
+        public OverdueInvoicePolicy(IInvoiceService invoiceService)
+        {
+            _invoiceService = invoiceService;
         }
 
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<OverdueInvoiceData> mapper)
@@ -34,9 +41,7 @@ namespace Finance
         public async Task Timeout(CheckPayment state, IMessageHandlerContext context)
         {
             var invoiceNumber = Data.InvoiceNumber;
-            // => check payment status using invoiceNumber
-            Math.DivRem(DateTime.Now.Hour, 2, out var rem);
-            var isInvoicePaid = rem == 0;
+            var isInvoicePaid = _invoiceService.IsInvoicePaid(invoiceNumber);
             if(!isInvoicePaid)
             {
                 await context.Publish(new InvoiceOverdueEvent()
