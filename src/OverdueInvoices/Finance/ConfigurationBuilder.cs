@@ -16,7 +16,7 @@ namespace Finance
             config.SendFailedMessagesTo("error");
             
             var scanner = config.AssemblyScanner();
-            scanner.IncludeOnly("Finance.dll", "Messages.dll");
+            scanner.IncludeOnlyThisAssemblyAndReferences();
 
             config.RegisterComponents(components =>
             {
