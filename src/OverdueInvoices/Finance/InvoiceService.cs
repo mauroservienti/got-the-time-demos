@@ -6,7 +6,7 @@ namespace Finance
     {
         public bool IsInvoicePaid(int number)
         {
-            Math.DivRem(DateTime.Now.Hour, 2, out var rem);
+            Math.DivRem(DateTime.Now.Second, 2, out var rem);
             var isInvoicePaid = rem == 0;
 
             return isInvoicePaid;
