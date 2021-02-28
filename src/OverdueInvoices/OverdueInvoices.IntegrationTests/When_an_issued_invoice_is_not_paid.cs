@@ -5,6 +5,7 @@ using NServiceBus.DelayedDelivery;
 using NServiceBus.IntegrationTesting;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DebtCollection;
 using Finance;
@@ -45,7 +46,7 @@ namespace OverdueInvoices.IntegrationTests
                 EndpointSetup(new FinanceEndpointTemplate(new NeverPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
             }
         }
-        
+
         class DebtCollectionEndpoint : EndpointConfigurationBuilder
         {
             public DebtCollectionEndpoint()
