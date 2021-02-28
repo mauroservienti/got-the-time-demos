@@ -35,6 +35,7 @@ namespace OverdueInvoices.IntegrationTests
                 .Run();
 
             Assert.True(context.MessageWasProcessedByHandler<InvoiceOverdue, InvoiceOverdueHandler>());
+            Assert.True(context.EventWasPublished<InvoiceOverdue>());
             Assert.False(context.HasFailedMessages());
             Assert.False(context.HasHandlingErrors());
         }
@@ -43,7 +44,7 @@ namespace OverdueInvoices.IntegrationTests
         {
             public FinanceEndpoint()
             {
-                EndpointSetup(new FinanceEndpointTemplate(new NeverPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
+                EndpointSetup<FinanceEndpointTemplate>();
             }
         }
 

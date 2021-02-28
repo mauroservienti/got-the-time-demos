@@ -9,4 +9,9 @@ namespace OverdueInvoices.IntegrationTests
         public DateTime DueDate { get; set; }
         public string CustomerCountry { get; set; }
     }
+
+    class TestInvoicePaidEvent : InvoicePaid
+    {
+        public int InvoiceNumber { get; set; }
+    }
 }

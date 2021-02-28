@@ -17,7 +17,7 @@ namespace OverdueInvoices.IntegrationTests
         {
             var context = await Scenario.Define<IntegrationScenarioContext>(ctx =>
                 {
-                    ctx.RegisterTimeoutRescheduleRule<CheckPayment>((msg, delay) => new DoNotDeliverBefore(DateTime.UtcNow.AddSeconds(2)));
+                    ctx.RegisterTimeoutRescheduleRule<CheckPayment>((msg, delay) => new DoNotDeliverBefore(DateTime.UtcNow.AddSeconds(10)));
                 })
                 .WithEndpoint<FinanceEndpoint>(behavior =>
                 {
@@ -27,12 +27,18 @@ namespace OverdueInvoices.IntegrationTests
                         DueDate = DateTime.Now.AddMonths(1),
                         CustomerCountry = "not italy"
                     }));
+                    behavior.When(ctx => ctx.TimeoutWasScheduled<CheckPayment>(), session =>
+                    {
+                        return session.Publish(new TestInvoicePaidEvent() {InvoiceNumber = 123});
+                    });
                 })
                 .Done(ctx => ctx.SagaWasCompleted<OverdueInvoicePolicy>() || ctx.HasFailedMessages())
                 .Run();
 
             Assert.True(context.MessageWasProcessedBySaga<InvoiceIssued, OverdueInvoicePolicy>());
-            Assert.True(context.MessageWasProcessedBySaga<CheckPayment, OverdueInvoicePolicy>());
+            Assert.True(context.MessageWasProcessedBySaga<InvoicePaid, OverdueInvoicePolicy>());
+            Assert.True(context.SagaWasCompleted<OverdueInvoicePolicy>());
+            Assert.False(context.MessageWasProcessedBySaga<CheckPayment, OverdueInvoicePolicy>());
             Assert.False(context.HasFailedMessages());
             Assert.False(context.HasHandlingErrors());
         }
@@ -41,7 +47,7 @@ namespace OverdueInvoices.IntegrationTests
         {
             public FinanceEndpoint()
             {
-                EndpointSetup(new FinanceEndpointTemplate(new AlwaysPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
+                EndpointSetup<FinanceEndpointTemplate>();
             }
         }
     }
