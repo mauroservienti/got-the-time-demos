@@ -8,6 +8,7 @@ namespace Finance
     class OverdueInvoicePolicy :
         Saga<OverdueInvoicePolicy.OverdueInvoiceData>,
         IAmStartedByMessages<InvoiceIssued>,
+        IHandleMessages<InvoicePaid>,
         IHandleTimeouts<CheckPayment>
     {
         private readonly IInvoiceService _invoiceService;
@@ -24,7 +25,9 @@ namespace Finance
 
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<OverdueInvoiceData> mapper)
         {
-            mapper.MapSaga(d => d.InvoiceNumber).ToMessage<InvoiceIssued>(m => m.InvoiceNumber);
+            mapper.MapSaga(d => d.InvoiceNumber)
+                .ToMessage<InvoiceIssued>(m => m.InvoiceNumber)
+                .ToMessage<InvoicePaid>(m => m.InvoiceNumber);
         }
 
         public async Task Handle(InvoiceIssued message, IMessageHandlerContext context)
@@ -39,6 +42,12 @@ namespace Finance
             }
             await RequestTimeout<CheckPayment>(context, dueDate);
             Console.WriteLine($"OverdueInvoicePolicy - CheckPayment scheduled for: {dueDate}");
+        }
+
+        public Task Handle(InvoicePaid message, IMessageHandlerContext context)
+        {
+            MarkAsComplete();
+            return Task.CompletedTask;
         }
 
         public async Task Timeout(CheckPayment state, IMessageHandlerContext context)
