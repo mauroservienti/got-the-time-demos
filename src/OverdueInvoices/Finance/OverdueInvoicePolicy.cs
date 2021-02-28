@@ -8,23 +8,19 @@ namespace Finance
     class OverdueInvoicePolicy :
         Saga<OverdueInvoicePolicy.OverdueInvoiceData>,
         IAmStartedByMessages<InvoiceIssued>,
+        IHandleMessages<InvoicePaid>,
         IHandleTimeouts<CheckPayment>
     {
-        private readonly IInvoiceService _invoiceService;
-
         internal class OverdueInvoiceData : ContainSagaData
         {
             public int InvoiceNumber { get; set; }
         }
 
-        public OverdueInvoicePolicy(IInvoiceService invoiceService)
-        {
-            _invoiceService = invoiceService;
-        }
-
         protected override void ConfigureHowToFindSaga(SagaPropertyMapper<OverdueInvoiceData> mapper)
         {
-            mapper.MapSaga(d => d.InvoiceNumber).ToMessage<InvoiceIssued>(m => m.InvoiceNumber);
+            mapper.MapSaga(d => d.InvoiceNumber)
+                .ToMessage<InvoiceIssued>(m => m.InvoiceNumber)
+                .ToMessage<InvoicePaid>(m => m.InvoiceNumber);
         }
 
         public async Task Handle(InvoiceIssued message, IMessageHandlerContext context)
@@ -33,32 +29,26 @@ namespace Finance
 
             Data.InvoiceNumber = message.InvoiceNumber;
             var dueDate = message.DueDate;
-            if(message.CustomerCountry == "Italy")
+            if (message.CustomerCountry == "Italy")
             {
                 dueDate = dueDate.AddDays(20);
             }
+
             await RequestTimeout<CheckPayment>(context, dueDate);
             Console.WriteLine($"OverdueInvoicePolicy - CheckPayment scheduled for: {dueDate}");
         }
 
+        public Task Handle(InvoicePaid message, IMessageHandlerContext context)
+        {
+            MarkAsComplete();
+            return Task.CompletedTask;
+        }
+
         public async Task Timeout(CheckPayment state, IMessageHandlerContext context)
         {
-            var invoiceNumber = Data.InvoiceNumber;
-            Console.WriteLine($"OverdueInvoicePolicy - ready to check payment for invoice {invoiceNumber}");
-
-            var isInvoicePaid = _invoiceService.IsInvoicePaid(invoiceNumber);
-            Console.WriteLine($"OverdueInvoicePolicy - 'isInvoicePaid': {isInvoicePaid}");
-            if(!isInvoicePaid)
-            {
-                Console.WriteLine($"OverdueInvoicePolicy - invoice is overdue, going to publish InvoiceOverdue event.");
-
-                await context.Publish(new InvoiceOverdueEvent()
-                {
-                    InvoiceNumber = invoiceNumber
-                });
-            }
-
-            Console.WriteLine($"OverdueInvoicePolicy - completed.");
+            //If the timeout is received it means we never received the InvoicePaid message, by definition this invoice is overdue.
+            Console.WriteLine($"OverdueInvoicePolicy - Invoice {Data.InvoiceNumber} is overdue, publishing InvoiceOverdue event.");
+            await context.Publish(new InvoiceOverdueEvent() {InvoiceNumber = Data.InvoiceNumber});
             MarkAsComplete();
         }
     }

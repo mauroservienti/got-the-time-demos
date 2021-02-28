@@ -5,6 +5,7 @@ using NServiceBus.DelayedDelivery;
 using NServiceBus.IntegrationTesting;
 using NUnit.Framework;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DebtCollection;
 using Finance;
@@ -34,6 +35,7 @@ namespace OverdueInvoices.IntegrationTests
                 .Run();
 
             Assert.True(context.MessageWasProcessedByHandler<InvoiceOverdue, InvoiceOverdueHandler>());
+            Assert.True(context.EventWasPublished<InvoiceOverdue>());
             Assert.False(context.HasFailedMessages());
             Assert.False(context.HasHandlingErrors());
         }
@@ -42,10 +44,10 @@ namespace OverdueInvoices.IntegrationTests
         {
             public FinanceEndpoint()
             {
-                EndpointSetup(new FinanceEndpointTemplate(new NeverPaidInvoiceService()), (endpointConfiguration, descriptor) => { });
+                EndpointSetup<FinanceEndpointTemplate>();
             }
         }
-        
+
         class DebtCollectionEndpoint : EndpointConfigurationBuilder
         {
             public DebtCollectionEndpoint()
