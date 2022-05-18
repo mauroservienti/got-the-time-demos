@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using static SimpleExec.Command;
 using Console = Colorful.Console;
 
@@ -14,11 +15,11 @@ class DotnetSdkManager
 
     string dotnetPath = null;
 
-    public string GetDotnetCliPath()
+    public async Task<string> GetDotnetCliPath()
     {
         if (dotnetPath == null)
         {
-            var (customSdk, sdkPath, sdkVersion) = EnsureRequiredSdkIsInstalled();
+            var (customSdk, sdkPath, sdkVersion) = await EnsureRequiredSdkIsInstalled();
             Console.WriteLine($"Build will be executed using {(customSdk ? "user defined SDK" : "default SDK")}, Version '{sdkVersion}'.{(customSdk ? $" Installed at '{sdkPath}'" : "")}");
             dotnetPath = customSdk
                 ? Path.Combine(sdkPath, "dotnet")
@@ -28,9 +29,9 @@ class DotnetSdkManager
         return dotnetPath;
     }
 
-    (bool customSdk, string sdkPath, string sdkVersion) EnsureRequiredSdkIsInstalled()
+    async Task<(bool customSdk, string sdkPath, string sdkVersion)> EnsureRequiredSdkIsInstalled()
     {
-        var currentSdkVersion = Read("dotnet", "--version").TrimEnd(Environment.NewLine.ToCharArray());
+        var currentSdkVersion = (await ReadAsync("dotnet", "--version")).StandardOutput.TrimEnd(Environment.NewLine.ToCharArray());
         var requiredSdkFile = Directory.EnumerateFiles(".", ".required-sdk", SearchOption.TopDirectoryOnly).SingleOrDefault();
 
         if (string.IsNullOrWhiteSpace(requiredSdkFile))
@@ -43,7 +44,7 @@ class DotnetSdkManager
 
         if (string.Compare(currentSdkVersion, requiredSdkVersion) == 0)
         {
-            Console.WriteLine("Insalled SDK is the same as required one, '.required-sdk' file is not necessary. Build will use the SDK available on the machine.", Color.Yellow);
+            Console.WriteLine("Installed SDK is the same as required one, '.required-sdk' file is not necessary. Build will use the SDK available on the machine.", Color.Yellow);
             return (false, "", currentSdkVersion);
         }
 
@@ -66,11 +67,11 @@ class DotnetSdkManager
         var installScriptLocation = Path.Combine(".", buildSupportDir, installScriptName);
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Run("powershell", $@"{installScriptLocation} -Version {requiredSdkVersion} -InstallDir {customSdkInstallDir}");
+            await RunAsync("powershell", $@"{installScriptLocation} -Version {requiredSdkVersion} -InstallDir {customSdkInstallDir}");
         }
         else
         {
-            Run("bash", $@"{installScriptLocation} --version {requiredSdkVersion} --install-dir {customSdkInstallDir}");
+            await RunAsync("bash", $@"{installScriptLocation} --version {requiredSdkVersion} --install-dir {customSdkInstallDir}");
         }
 
         return (true, customSdkInstallDir, requiredSdkVersion);
