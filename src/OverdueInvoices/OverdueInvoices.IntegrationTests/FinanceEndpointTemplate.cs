@@ -10,7 +10,7 @@ namespace OverdueInvoices.IntegrationTests
     class FinanceEndpointTemplate : EndpointTemplate
     {
         protected override Task<EndpointConfiguration> OnGetConfiguration(RunDescriptor runDescriptor,
-            EndpointCustomizationConfiguration endpointCustomizationConfiguration, Action<EndpointConfiguration> configurationBuilderCustomization)
+            EndpointCustomizationConfiguration endpointCustomizationConfiguration, Func<EndpointConfiguration, Task> configurationBuilderCustomization)
         {
             return Task.FromResult(ConfigurationFactory.CreateConfiguration());
         }
