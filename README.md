@@ -4,7 +4,7 @@ Demos and sample for my "Got the Time" talk
 
 ## Requirements
 
-Visual Studio 2019 with .NET Core 3.x support (Community Edition is supported), available for download at https://www.visualstudio.com/downloads/
+Visual Studio 2022 with .NET Core 6.x support (Community Edition is supported), available for download at https://www.visualstudio.com/downloads/
 
 ## Demo: Overdue Invoices
 
