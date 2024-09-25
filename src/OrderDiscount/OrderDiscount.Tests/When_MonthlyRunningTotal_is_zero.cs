@@ -31,8 +31,8 @@ namespace OrderDiscount.Tests
 
             var processOrderMessage = context.SentMessages.SingleOrDefault(m => m.Message.GetType() == typeof(ProcessOrder));
             
-            Assert.IsNotNull(processOrderMessage);
-            Assert.AreEqual(0,processOrderMessage.Message<ProcessOrder>().Discount);
+            Assert.That(processOrderMessage, Is.Not.Null);
+            Assert.That(processOrderMessage.Message<ProcessOrder>().Discount, Is.EqualTo(0));
         }
     }
 }
