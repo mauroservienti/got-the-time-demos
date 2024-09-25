@@ -34,10 +34,10 @@ namespace OverdueInvoices.IntegrationTests
                 .Done(ctx => ctx.HandlerWasInvoked<InvoiceOverdueHandler>() && ctx.SagaWasCompleted<OverdueInvoicePolicy>() || ctx.HasFailedMessages())
                 .Run();
 
-            Assert.True(context.MessageWasProcessedByHandler<InvoiceOverdue, InvoiceOverdueHandler>());
-            Assert.True(context.EventWasPublished<InvoiceOverdue>());
-            Assert.False(context.HasFailedMessages());
-            Assert.False(context.HasHandlingErrors());
+            Assert.That(context.MessageWasProcessedByHandler<InvoiceOverdue, InvoiceOverdueHandler>(), Is.True);
+            Assert.That(context.EventWasPublished<InvoiceOverdue>(), Is.True);
+            Assert.That(context.HasFailedMessages(), Is.False);
+            Assert.That(context.HasHandlingErrors(), Is.False);
         }
 
         class FinanceEndpoint : EndpointConfigurationBuilder

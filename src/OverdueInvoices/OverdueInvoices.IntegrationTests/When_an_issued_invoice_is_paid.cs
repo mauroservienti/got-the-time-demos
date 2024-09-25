@@ -35,12 +35,12 @@ namespace OverdueInvoices.IntegrationTests
                 .Done(ctx => ctx.SagaWasCompleted<OverdueInvoicePolicy>() || ctx.HasFailedMessages())
                 .Run();
 
-            Assert.True(context.MessageWasProcessedBySaga<InvoiceIssued, OverdueInvoicePolicy>());
-            Assert.True(context.MessageWasProcessedBySaga<InvoicePaid, OverdueInvoicePolicy>());
-            Assert.True(context.SagaWasCompleted<OverdueInvoicePolicy>());
-            Assert.False(context.MessageWasProcessedBySaga<CheckPayment, OverdueInvoicePolicy>());
-            Assert.False(context.HasFailedMessages());
-            Assert.False(context.HasHandlingErrors());
+            Assert.That(context.MessageWasProcessedBySaga<InvoiceIssued, OverdueInvoicePolicy>(), Is.True);
+            Assert.That(context.MessageWasProcessedBySaga<InvoicePaid, OverdueInvoicePolicy>(), Is.True);
+            Assert.That(context.SagaWasCompleted<OverdueInvoicePolicy>(), Is.True);
+            Assert.That(context.MessageWasProcessedBySaga<CheckPayment, OverdueInvoicePolicy>(), Is.False);
+            Assert.That(context.HasFailedMessages(), Is.False);
+            Assert.That(context.HasHandlingErrors(), Is.False);
         }
 
         class FinanceEndpoint : EndpointConfigurationBuilder
