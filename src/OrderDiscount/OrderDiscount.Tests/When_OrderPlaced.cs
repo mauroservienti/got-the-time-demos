@@ -32,8 +32,8 @@ namespace OrderDiscount.Tests
 
             var deductFromRunningTotalTimeout = context.SentMessages.SingleOrDefault(m => m.Message.GetType() == typeof(OrderDiscountPolicy.DeductFromRunningTotal));
             
-            Assert.IsNotNull(deductFromRunningTotalTimeout);
-            Assert.AreEqual(expectedOrderTotalAmount,deductFromRunningTotalTimeout.Message<OrderDiscountPolicy.DeductFromRunningTotal>().OrderTotalAmount);
+            Assert.That(deductFromRunningTotalTimeout, Is.Not.Null);
+            Assert.That(deductFromRunningTotalTimeout.Message<OrderDiscountPolicy.DeductFromRunningTotal>().OrderTotalAmount, Is.EqualTo(expectedOrderTotalAmount));
         }
     }
 }
