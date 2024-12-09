@@ -9,6 +9,7 @@ namespace Sales
         {
             var config = new EndpointConfiguration("Sales");
 
+            config.UseSerialization<SystemJsonSerializer>();
             config.UseTransport<LearningTransport>();
             config.UsePersistence<LearningPersistence>();
             config.SendFailedMessagesTo("error");

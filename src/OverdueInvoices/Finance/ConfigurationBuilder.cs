@@ -9,6 +9,7 @@ namespace Finance
         {
             var config = new EndpointConfiguration("Finance");
 
+            config.UseSerialization<SystemJsonSerializer>();
             config.UseTransport<LearningTransport>();
             config.UsePersistence<LearningPersistence>();
             config.SendFailedMessagesTo("error");
