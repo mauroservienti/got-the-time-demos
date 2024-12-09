@@ -10,6 +10,7 @@ namespace DebtCollection
         {
             var config = new EndpointConfiguration("DebtCollection");
             
+            config.UseSerialization<SystemJsonSerializer>();
             config.UseTransport<LearningTransport>();
             config.SendFailedMessagesTo("error");
             
