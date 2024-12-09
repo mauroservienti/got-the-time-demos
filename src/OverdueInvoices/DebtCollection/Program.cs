@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using NServiceBus;
+using NServiceBus.Configuration.AdvancedExtensibility;
 
 namespace DebtCollection
 {
@@ -8,10 +9,12 @@ namespace DebtCollection
     {
         static async Task Main(string[] args)
         {
-            Console.Title = "DebtCollection";
-            var endpointInstance = await Endpoint.Start(new ConfigurationFactory().CreateConfiguration());
+            var endpointConfiguration = new ConfigurationFactory().CreateConfiguration();
+            var endpointName = endpointConfiguration.GetSettings().EndpointName();
+            var endpointInstance = await Endpoint.Start(endpointConfiguration);
 
-            Console.WriteLine($"{Console.Title} started. Press any key to stop.");
+            Console.Title = endpointName;
+            Console.WriteLine($"{endpointName} started. Press any key to stop.");
             Console.ReadLine();
             
             await endpointInstance.Stop();
